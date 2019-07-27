@@ -1,0 +1,1806 @@
+<!doctype html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://distill.pub/template.v2.js"></script>
+    <style>
+        .subgrid {
+	grid-column: screen;
+	display: grid;
+	grid-template-columns: inherit;
+	grid-template-rows: inherit;
+	grid-column-gap: inherit;
+	grid-row-gap: inherit;
+}
+
+d-figure.base-grid {
+	grid-column: screen;
+	background: hsl(0, 0%, 97%);
+	padding: 20px 0;
+	border-top: 1px solid rgba(0, 0, 0, 0.1);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+d-figure {
+	margin-bottom: 1em;
+	position: relative;
+}
+
+d-figure > figure {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.shaded-figure {
+	background-color: hsl(0, 0%, 97%);
+	border-top: 1px solid hsla(0, 0%, 0%, 0.1);
+	border-bottom: 1px solid hsla(0, 0%, 0%, 0.1);
+	padding: 30px 0;
+}
+
+.pointer {
+	position: absolute;
+	width: 26px;
+	height: 26px;
+	top: 26px;
+	left: -48px;
+}
+
+#rebuttal,
+#response-info {
+	margin: 1em 0;
+	background-color: hsl(128, 50%, 97%);
+	border-left: solid hsl(129, 50%, 25%) 3px;
+	padding: 1em;
+	/* border-radius: 0.25em; */
+}
+
+#rebuttal .rebuttal-info {
+	color: hsl(129, 50%, 15%);
+	font-style: italic;
+	/* background-color: hsl(128, 50%, 90%); */
+	/* border: 1px solid hsl(128, 25%, 85%); */
+	/* padding: 0.5em; */
+	margin-bottom: 0.5em;
+	/* border-radius: 0.25em; */
+}
+
+#rebuttal figure {
+	background: white;
+	padding: 1em;
+	border-radius: 1em;
+}
+
+    </style>
+    <style>
+        /* line 6, source/sass/image-picker.scss */
+ul.thumbnails.image_picker_selector {
+  overflow: auto;
+  list-style-image: none;
+  list-style-position: outside;
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px; }
+  /* line 15, source/sass/image-picker.scss */
+  ul.thumbnails.image_picker_selector ul {
+    overflow: auto;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px; }
+  /* line 25, source/sass/image-picker.scss */
+  ul.thumbnails.image_picker_selector li.group_title {
+    float: none; }
+  /* line 30, source/sass/image-picker.scss */
+  ul.thumbnails.image_picker_selector li {
+    margin: 0px 12px 12px 0px;
+    float: left; }
+    /* line 35, source/sass/image-picker.scss */
+    ul.thumbnails.image_picker_selector li .thumbnail {
+      padding: 6px;
+      border: 1px solid #DDD;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none; }
+      /* line 42, source/sass/image-picker.scss */
+      ul.thumbnails.image_picker_selector li .thumbnail img {
+        -webkit-user-drag: none; }
+    /* line 48, source/sass/image-picker.scss */
+    ul.thumbnails.image_picker_selector li .thumbnail.selected {
+      background: #08C; }
+    </style>
+    <style>
+        ul.thumbnails.image_picker_selector {
+  display: flex;
+  flex-direction: row;
+}
+
+    </style>
+    <style>
+        div.juxtapose {
+	width: 100%;
+	font-family: Helvetica, Arial, sans-serif;
+}
+
+div.jx-slider {
+	width: 100%;
+	height: 100%;
+	position: relative;
+	overflow: hidden;
+	cursor: pointer;
+	color: #f3f3f3;
+}
+
+
+div.jx-handle {
+	position: absolute;
+	height: 100%;
+	width: 40px;
+	cursor: col-resize;
+	z-index: 15;
+	margin-left: -20px;
+}
+
+.vertical div.jx-handle {
+	height: 40px;
+	width: 100%;
+	cursor: row-resize;
+	margin-top: -20px;
+	margin-left: 0;
+}
+
+div.jx-control {
+	height: 100%;
+	margin-right: auto;
+	margin-left: auto;
+	width: 3px;
+	background-color: currentColor;
+}
+
+.vertical div.jx-control {
+	height: 3px;
+	width: 100%;
+	background-color: currentColor;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+div.jx-controller {
+	position: absolute;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	height: 60px;
+	width: 9px;
+	margin-left: -3px;
+	background-color: currentColor;
+}
+
+.vertical div.jx-controller {
+	height: 9px;
+	width: 100px;
+	margin-left: auto;
+	margin-right: auto;
+	top: -3px;
+	position: relative;
+}
+
+div.jx-arrow {
+	position: absolute;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	width: 0;
+	height: 0;
+	transition: all .2s ease;
+}
+
+.vertical div.jx-arrow {
+	position: absolute;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	width: 0;
+	height: 0;
+	transition: all .2s ease;
+}
+
+
+div.jx-arrow.jx-left {
+	left: 2px;
+	border-style: solid;
+	border-width: 8px 8px 8px 0;
+	border-color: transparent currentColor transparent transparent;
+}
+
+div.jx-arrow.jx-right {
+	right: 2px;
+	border-style: solid;
+	border-width: 8px 0 8px 8px;
+	border-color: transparent transparent transparent currentColor;
+}
+
+.vertical div.jx-arrow.jx-left {
+	left: 0px;
+	top: 2px;
+	border-style: solid;
+	border-width: 0px 8px 8px 8px;
+	border-color: transparent transparent currentColor transparent;
+}
+
+.vertical div.jx-arrow.jx-right {
+	right: 0px;
+	top: auto;
+	bottom: 2px;
+	border-style: solid;
+	border-width: 8px 8px 0 8px;
+	border-color: currentColor transparent transparent transparent;
+}
+
+div.jx-handle:hover div.jx-arrow.jx-left,
+div.jx-handle:active div.jx-arrow.jx-left {
+	left: -1px;
+}
+
+div.jx-handle:hover div.jx-arrow.jx-right,
+div.jx-handle:active div.jx-arrow.jx-right {
+	right: -1px;
+}
+
+.vertical div.jx-handle:hover div.jx-arrow.jx-left,
+.vertical div.jx-handle:active div.jx-arrow.jx-left {
+	left: 0px;
+	top: 0px;
+}
+
+.vertical div.jx-handle:hover div.jx-arrow.jx-right,
+.vertical div.jx-handle:active div.jx-arrow.jx-right {
+	right: 0px;
+	bottom: 0px;
+}
+
+
+div.jx-image {
+	position: absolute;
+	height: 100%;
+	display: inline-block;
+	top: 0;
+	overflow: hidden;
+	-webkit-backface-visibility: hidden;
+}
+
+.vertical div.jx-image {
+	width: 100%;
+	left: 0;
+	top: auto;
+}
+
+div.jx-image img {
+	height: 100%;
+	width: auto;
+	z-index: 5;
+	position: absolute;
+	margin-bottom: 0;
+
+	max-height: none;
+	max-width: none;
+	max-height: initial;
+	max-width: initial;
+}
+
+.vertical div.jx-image img {
+	height: auto;
+	width: 100%;
+}
+
+div.jx-image.jx-left {
+	left: 0;
+	background-position: left;
+}
+
+div.jx-image.jx-left img {
+	left: 0;
+}
+
+div.jx-image.jx-right {
+	right: 0;
+	background-position: right;
+}
+
+div.jx-image.jx-right img {
+	right: 0;
+	bottom: 0;
+}
+
+
+.veritcal div.jx-image.jx-left {
+	top: 0;
+	background-position: top;
+}
+
+.veritcal div.jx-image.jx-left img {
+	top: 0;
+}
+
+.vertical div.jx-image.jx-right {
+	bottom: 0;
+	background-position: bottom;
+}
+
+.veritcal div.jx-image.jx-right img {
+	bottom: 0;
+}
+
+
+div.jx-image div.jx-label {
+	font-size: 1em;
+	padding: .25em .75em;
+	position: relative;
+	display: inline-block;
+	top: 0;
+	background-color: #000; /* IE 8 */
+	background-color: rgba(0,0,0,.7);
+	color: white;
+	z-index: 10;
+	white-space: nowrap;
+	line-height: 18px;
+	vertical-align: middle;
+}
+
+div.jx-image.jx-left div.jx-label {
+	float: left;
+	left: 0;
+}
+
+div.jx-image.jx-right div.jx-label {
+	float: right;
+	right: 0;
+}
+
+.vertical div.jx-image div.jx-label {
+	display: table;
+	position: absolute;
+}
+
+.vertical div.jx-image.jx-right div.jx-label {
+	left: 0;
+	bottom: 0;
+	top: auto;
+}
+
+div.jx-credit {
+	line-height: 1.1;
+	font-size: 0.75em;
+}
+
+div.jx-credit em {
+	font-weight: bold;
+	font-style: normal;
+}
+
+
+/* Animation */
+
+div.jx-image.transition {
+	transition: width .5s ease;
+}
+
+div.jx-handle.transition {
+	transition: left .5s ease;
+}
+
+.vertical div.jx-image.transition {
+	transition: height .5s ease;
+}
+
+.vertical div.jx-handle.transition {
+	transition: top .5s ease;
+}
+
+/* Knight Lab Credit */
+a.jx-knightlab {
+	background-color: #000; /* IE 8 */
+	background-color: rgba(0,0,0,.25);
+	bottom: 0;
+	display: table;
+	height: 14px;
+	line-height: 14px;
+	padding: 1px 4px 1px 5px;
+	position: absolute;
+	right: 0;
+	text-decoration: none;
+	z-index: 10;
+}
+
+a.jx-knightlab div.knightlab-logo {
+	display: inline-block;
+	vertical-align: middle;
+	height: 8px;
+	width: 8px;
+	background-color: #c34528;
+	transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	top: -1.25px;
+	position: relative;
+	cursor: pointer;
+}
+
+a.jx-knightlab:hover {
+	background-color: #000; /* IE 8 */
+	background-color: rgba(0,0,0,.35);
+}
+a.jx-knightlab:hover div.knightlab-logo {
+	background-color: #ce4d28;
+}
+
+a.jx-knightlab span.juxtapose-name {
+	display: table-cell;
+	margin: 0;
+	padding: 0;
+	font-family: Helvetica, Arial, sans-serif;
+	font-weight: 300;
+	color: white;
+	font-size: 10px;
+	padding-left: 0.375em;
+	vertical-align: middle;
+	line-height: normal;
+	text-shadow: none;
+}
+
+/* keyboard accessibility */
+div.jx-controller:focus,
+div.jx-image.jx-left div.jx-label:focus,
+div.jx-image.jx-right div.jx-label:focus,
+a.jx-knightlab:focus {
+	background: #eae34a;
+	color: #000;
+}
+a.jx-knightlab:focus span.juxtapose-name{
+	color: #000;
+	border: none;
+}
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script>"use strict";
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function");
+}var _createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }return function (Constructor, protoProps, staticProps) {
+    return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), Constructor;
+  };
+}();(function () {
+  var ImagePicker,
+      ImagePickerOption,
+      both_array_are_equal,
+      sanitized_options,
+      indexOf = [].indexOf;jQuery.fn.extend({ imagepicker: function imagepicker() {
+      var opts = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};return this.each(function () {
+        var select;if ((select = jQuery(this)).data("picker") && select.data("picker").destroy(), select.data("picker", new ImagePicker(this, sanitized_options(opts))), null != opts.initialized) return opts.initialized.call(select.data("picker"));
+      });
+    } }), sanitized_options = function sanitized_options(opts) {
+    var default_options;return default_options = { hide_select: !0, show_label: !1, initialized: void 0, changed: void 0, clicked: void 0, selected: void 0, limit: void 0, limit_reached: void 0, font_awesome: !1 }, jQuery.extend(default_options, opts);
+  }, both_array_are_equal = function both_array_are_equal(a, b) {
+    var i, j, len, x;if (!a || !b || a.length !== b.length) return !1;for (a = a.slice(0), b = b.slice(0), a.sort(), b.sort(), i = j = 0, len = a.length; j < len; i = ++j) {
+      if (x = a[i], b[i] !== x) return !1;
+    }return !0;
+  }, ImagePicker = function () {
+    function ImagePicker(select_element) {
+      var opts1 = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};_classCallCheck(this, ImagePicker), this.sync_picker_with_select = this.sync_picker_with_select.bind(this), this.opts = opts1, this.select = jQuery(select_element), this.multiple = "multiple" === this.select.attr("multiple"), null != this.select.data("limit") && (this.opts.limit = parseInt(this.select.data("limit"))), this.build_and_append_picker();
+    }return _createClass(ImagePicker, [{ key: "destroy", value: function value() {
+        var j, len, ref;for (j = 0, len = (ref = this.picker_options).length; j < len; j++) {
+          ref[j].destroy();
+        }return this.picker.remove(), this.select.off("change", this.sync_picker_with_select), this.select.removeData("picker"), this.select.show();
+      } }, { key: "build_and_append_picker", value: function value() {
+        return this.opts.hide_select && this.select.hide(), this.select.on("change", this.sync_picker_with_select), null != this.picker && this.picker.remove(), this.create_picker(), this.select.after(this.picker), this.sync_picker_with_select();
+      } }, { key: "sync_picker_with_select", value: function value() {
+        var j, len, option, ref, results;for (results = [], j = 0, len = (ref = this.picker_options).length; j < len; j++) {
+          (option = ref[j]).is_selected() ? results.push(option.mark_as_selected()) : results.push(option.unmark_as_selected());
+        }return results;
+      } }, { key: "create_picker", value: function value() {
+        return this.picker = jQuery("<ul class='thumbnails image_picker_selector'></ul>"), this.picker_options = [], this.recursively_parse_option_groups(this.select, this.picker), this.picker;
+      } }, { key: "recursively_parse_option_groups", value: function value(scoped_dom, target_container) {
+        var container, j, k, len, len1, option, option_group, ref, ref1, results;for (j = 0, len = (ref = scoped_dom.children("optgroup")).length; j < len; j++) {
+          option_group = ref[j], option_group = jQuery(option_group), (container = jQuery("<ul></ul>")).append(jQuery("<li class='group_title'>" + option_group.attr("label") + "</li>")), target_container.append(jQuery("<li class='group'>").append(container)), this.recursively_parse_option_groups(option_group, container);
+        }for (ref1 = function () {
+          var l, len1, ref1, results1;for (results1 = [], l = 0, len1 = (ref1 = scoped_dom.children("option")).length; l < len1; l++) {
+            option = ref1[l], results1.push(new ImagePickerOption(option, this, this.opts));
+          }return results1;
+        }.call(this), results = [], k = 0, len1 = ref1.length; k < len1; k++) {
+          option = ref1[k], this.picker_options.push(option), option.has_image() && results.push(target_container.append(option.node));
+        }return results;
+      } }, { key: "has_implicit_blanks", value: function value() {
+        var option;return function () {
+          var j, len, ref, results;for (results = [], j = 0, len = (ref = this.picker_options).length; j < len; j++) {
+            (option = ref[j]).is_blank() && !option.has_image() && results.push(option);
+          }return results;
+        }.call(this).length > 0;
+      } }, { key: "selected_values", value: function value() {
+        return this.multiple ? this.select.val() || [] : [this.select.val()];
+      } }, { key: "toggle", value: function value(imagepicker_option, original_event) {
+        var new_values, old_values, selected_value;if (old_values = this.selected_values(), selected_value = imagepicker_option.value().toString(), this.multiple ? indexOf.call(this.selected_values(), selected_value) >= 0 ? ((new_values = this.selected_values()).splice(jQuery.inArray(selected_value, old_values), 1), this.select.val([]), this.select.val(new_values)) : null != this.opts.limit && this.selected_values().length >= this.opts.limit ? null != this.opts.limit_reached && this.opts.limit_reached.call(this.select) : this.select.val(this.selected_values().concat(selected_value)) : this.has_implicit_blanks() && imagepicker_option.is_selected() ? this.select.val("") : this.select.val(selected_value), !both_array_are_equal(old_values, this.selected_values()) && (this.select.change(), null != this.opts.changed)) return this.opts.changed.call(this.select, old_values, this.selected_values(), original_event);
+      } }]), ImagePicker;
+  }(), ImagePickerOption = function () {
+    function ImagePickerOption(option_element, picker) {
+      var opts1 = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {};_classCallCheck(this, ImagePickerOption), this.clicked = this.clicked.bind(this), this.picker = picker, this.opts = opts1, this.option = jQuery(option_element), this.create_node();
+    }return _createClass(ImagePickerOption, [{ key: "destroy", value: function value() {
+        return this.node.find(".thumbnail").off("click", this.clicked);
+      } }, { key: "has_image", value: function value() {
+        return null != this.option.data("img-src");
+      } }, { key: "is_blank", value: function value() {
+        return !(null != this.value() && "" !== this.value());
+      } }, { key: "is_selected", value: function value() {
+        var select_value;return select_value = this.picker.select.val(), this.picker.multiple ? jQuery.inArray(this.value(), select_value) >= 0 : this.value() === select_value;
+      } }, { key: "mark_as_selected", value: function value() {
+        return this.node.find(".thumbnail").addClass("selected");
+      } }, { key: "unmark_as_selected", value: function value() {
+        return this.node.find(".thumbnail").removeClass("selected");
+      } }, { key: "value", value: function value() {
+        return this.option.val();
+      } }, { key: "label", value: function value() {
+        return this.option.data("img-label") ? this.option.data("img-label") : this.option.text();
+      } }, { key: "clicked", value: function value(event) {
+        if (this.picker.toggle(this, event), null != this.opts.clicked && this.opts.clicked.call(this.picker.select, this, event), null != this.opts.selected && this.is_selected()) return this.opts.selected.call(this.picker.select, this, event);
+      } }, { key: "create_node", value: function value() {
+        var image, imgAlt, imgClass, thumbnail;return this.node = jQuery("<li/>"), this.option.data("font_awesome") ? (image = jQuery("<i>")).attr("class", "fa-fw " + this.option.data("img-src")) : (image = jQuery("<img class='image_picker_image'/>")).attr("src", this.option.data("img-src")), thumbnail = jQuery("<div class='thumbnail'>"), (imgClass = this.option.data("img-class")) && (this.node.addClass(imgClass), image.addClass(imgClass), thumbnail.addClass(imgClass)), (imgAlt = this.option.data("img-alt")) && image.attr("alt", imgAlt), thumbnail.on("click", this.clicked), thumbnail.append(image), this.opts.show_label && thumbnail.append(jQuery("<p/>").html(this.label())), this.node.append(thumbnail), this.node;
+      } }]), ImagePickerOption;
+  }();
+}).call(void 0);</script>
+    <script>'use strict';
+
+/* juxtapose - v1.1.2 - 2015-07-16
+ * Copyright (c) 2015 Alex Duner and Northwestern University Knight Lab
+ */
+
+(function (document, window) {
+
+  var juxtapose = {
+    sliders: [],
+    OPTIMIZATION_ACCEPTED: 1,
+    OPTIMIZATION_WAS_CONSTRAINED: 2
+  };
+
+  var flickr_key = "d90fc2d1f4acc584e08b8eaea5bf4d6c";
+  var FLICKR_SIZE_PREFERENCES = ['Large', 'Medium'];
+
+  function Graphic(properties, slider) {
+    var self = this;
+    this.image = new Image();
+
+    this.loaded = false;
+    this.image.onload = function () {
+      self.loaded = true;
+      slider._onLoaded();
+    };
+
+    this.image.src = properties.src;
+    this.image.alt = properties.alt || '';
+    this.label = properties.label || false;
+    this.credit = properties.credit || false;
+  }
+
+  function FlickrGraphic(properties, slider) {
+    var self = this;
+    this.image = new Image();
+
+    this.loaded = false;
+    this.image.onload = function () {
+      self.loaded = true;
+      slider._onLoaded();
+    };
+
+    this.flickrID = this.getFlickrID(properties.src);
+    this.callFlickrAPI(this.flickrID, self);
+
+    this.label = properties.label || false;
+    this.credit = properties.credit || false;
+  }
+
+  FlickrGraphic.prototype = {
+    getFlickrID: function getFlickrID(url) {
+      if (url.match(/flic.kr\/.+/i)) {
+        var encoded = url.split('/').slice(-1)[0];
+        return base58Decode(encoded);
+      }
+      var idx = url.indexOf("flickr.com/photos/");
+      var pos = idx + "flickr.com/photos/".length;
+      var photo_info = url.substr(pos);
+      if (photo_info.indexOf('/') == -1) return null;
+      if (photo_info.indexOf('/') === 0) photo_info = photo_info.substr(1);
+      id = photo_info.split("/")[1];
+      return id;
+    },
+
+    callFlickrAPI: function callFlickrAPI(id, self) {
+      var url = 'https://api.flickr.com/services/rest/?method=flickr.photos.getSizes' + '&api_key=' + flickr_key + '&photo_id=' + id + '&format=json&nojsoncallback=1';
+
+      var request = new XMLHttpRequest();
+      request.open('GET', url, true);
+      request.onload = function () {
+        if (request.status >= 200 && request.status < 400) {
+          data = JSON.parse(request.responseText);
+          var flickr_url = self.bestFlickrUrl(data.sizes.size);
+          self.setFlickrImage(flickr_url);
+        } else {
+          console.error("There was an error getting the picture from Flickr");
+        }
+      };
+      request.onerror = function () {
+        console.error("There was an error getting the picture from Flickr");
+      };
+      request.send();
+    },
+
+    setFlickrImage: function setFlickrImage(src) {
+      this.image.src = src;
+    },
+
+    bestFlickrUrl: function bestFlickrUrl(ary) {
+      var dict = {};
+      for (var i = 0; i < ary.length; i++) {
+        dict[ary[i].label] = ary[i].source;
+      }
+      for (var j = 0; j < FLICKR_SIZE_PREFERENCES.length; j++) {
+        if (FLICKR_SIZE_PREFERENCES[j] in dict) {
+          return dict[FLICKR_SIZE_PREFERENCES[j]];
+        }
+      }
+      return ary[0].source;
+    }
+  };
+
+  function getNaturalDimensions(DOMelement) {
+    if (DOMelement.naturalWidth && DOMelement.naturalHeight) {
+      return { width: DOMelement.naturalWidth, height: DOMelement.naturalHeight };
+    }
+    // http://www.jacklmoore.com/notes/naturalwidth-and-naturalheight-in-ie/
+    var img = new Image();
+    img.src = DOMelement.src;
+    return { width: img.width, height: img.height };
+  }
+
+  function getImageDimensions(img) {
+    var dimensions = {
+      width: getNaturalDimensions(img).width,
+      height: getNaturalDimensions(img).height,
+      aspect: function aspect() {
+        return this.width / this.height;
+      }
+    };
+    return dimensions;
+  }
+
+  function addClass(element, c) {
+    if (element.classList) {
+      element.classList.add(c);
+    } else {
+      element.className += " " + c;
+    }
+  }
+
+  function removeClass(element, c) {
+    element.className = element.className.replace(/(\S+)\s*/g, function (w, match) {
+      if (match === c) {
+        return '';
+      }
+      return w;
+    }).replace(/^\s+/, '');
+  }
+
+  function setText(element, text) {
+    if (document.body.textContent) {
+      element.textContent = text;
+    } else {
+      element.innerText = text;
+    }
+  }
+
+  function getComputedWidthAndHeight(element) {
+    if (window.getComputedStyle) {
+      return {
+        width: parseInt(getComputedStyle(element).width, 10),
+        height: parseInt(getComputedStyle(element).height, 10)
+      };
+    } else {
+      w = element.getBoundingClientRect().right - element.getBoundingClientRect().left;
+      h = element.getBoundingClientRect().bottom - element.getBoundingClientRect().top;
+      return {
+        width: parseInt(w, 10) || 0,
+        height: parseInt(h, 10) || 0
+      };
+    }
+  }
+
+  function viewport() {
+    var e = window,
+        a = 'inner';
+    if (!('innerWidth' in window)) {
+      a = 'client';
+      e = document.documentElement || document.body;
+    }
+    return { width: e[a + 'Width'], height: e[a + 'Height'] };
+  }
+
+  function getPageX(e) {
+    var pageX;
+    if (e.pageX) {
+      pageX = e.pageX;
+    } else if (e.touches) {
+      pageX = e.touches[0].pageX;
+    } else {
+      pageX = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+    }
+    return pageX;
+  }
+
+  function getPageY(e) {
+    var pageY;
+    if (e.pageY) {
+      pageY = e.pageY;
+    } else if (e.touches) {
+      pageY = e.touches[0].pageY;
+    } else {
+      pageY = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+    }
+    return pageY;
+  }
+
+  function checkFlickr(url) {
+    if (url.match(/flic.kr\/.+/i)) {
+      return true;
+    }
+    var idx = url.indexOf("flickr.com/photos/");
+    if (idx == -1) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function base58Decode(encoded) {
+    var alphabet = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ',
+        base = alphabet.length;
+    if (typeof encoded !== 'string') {
+      throw '"base58Decode" only accepts strings.';
+    }
+    var decoded = 0;
+    while (encoded) {
+      var alphabetPosition = alphabet.indexOf(encoded[0]);
+      if (alphabetPosition < 0) {
+        throw '"base58Decode" can\'t find "' + encoded[0] + '" in the alphabet: "' + alphabet + '"';
+      }
+      var powerOf = encoded.length - 1;
+      decoded += alphabetPosition * Math.pow(base, powerOf);
+      encoded = encoded.substring(1);
+    }
+    return decoded.toString();
+  }
+
+  function getLeftPercent(slider, input) {
+    var leftPercent;
+    if (typeof input === "string" || typeof input === "number") {
+      leftPercent = parseInt(input, 10);
+    } else {
+      var sliderRect = slider.getBoundingClientRect();
+      var offset = {
+        top: sliderRect.top + document.body.scrollTop + document.documentElement.scrollTop,
+        left: sliderRect.left + document.body.scrollLeft + document.documentElement.scrollLeft
+      };
+      var width = slider.offsetWidth;
+      var pageX = getPageX(input);
+      var relativeX = pageX - offset.left;
+      leftPercent = relativeX / width * 100;
+    }
+    return leftPercent;
+  }
+
+  function getTopPercent(slider, input) {
+    if (typeof input === "string" || typeof input === "number") {
+      topPercent = parseInt(input, 10);
+    } else {
+      var sliderRect = slider.getBoundingClientRect();
+      var offset = {
+        top: sliderRect.top + document.body.scrollTop + document.documentElement.scrollTop,
+        left: sliderRect.left + document.body.scrollLeft + document.documentElement.scrollLeft
+      };
+      var width = slider.offsetHeight;
+      var pageY = getPageY(input);
+      var relativeY = pageY - offset.top;
+      topPercent = relativeY / width * 100;
+    }
+    return topPercent;
+  }
+
+  // values of BOOLEAN_OPTIONS are ignored. just used for 'in' test on keys
+  var BOOLEAN_OPTIONS = { 'animate': true, 'showLabels': true, 'showCredits': true, 'makeResponsive': true };
+  function interpret_boolean(x) {
+    if (typeof x != 'string') {
+      return Boolean(x);
+    }
+    return !(x === 'false' || x === '');
+  }
+
+  function JXSlider(selector, images, options) {
+
+    this.selector = selector;
+
+    var i;
+    this.options = { // new options must have default values set here.
+      animate: true,
+      showLabels: true,
+      showCredits: true,
+      makeResponsive: true,
+      startingPosition: "50%",
+      mode: 'horizontal',
+      callback: null // pass a callback function if you like
+    };
+
+    for (i in this.options) {
+      if (i in options) {
+        if (i in BOOLEAN_OPTIONS) {
+          this.options[i] = interpret_boolean(options[i]);
+        } else {
+          this.options[i] = options[i];
+        }
+      }
+    }
+
+    if (images.length == 2) {
+
+      if (checkFlickr(images[0].src)) {
+        this.imgBefore = new FlickrGraphic(images[0], this);
+      } else {
+        this.imgBefore = new Graphic(images[0], this);
+      }
+
+      if (checkFlickr(images[1].src)) {
+        this.imgAfter = new FlickrGraphic(images[1], this);
+      } else {
+        this.imgAfter = new Graphic(images[1], this);
+      }
+    } else {
+      console.warn("The images parameter takes two Image objects.");
+    }
+
+    if (this.imgBefore.credit || this.imgAfter.credit) {
+      this.options.showCredits = true;
+    } else {
+      this.options.showCredits = false;
+    }
+  }
+
+  JXSlider.prototype = {
+
+    updateSlider: function updateSlider(input, animate) {
+      var leftPercent, rightPercent;
+
+      if (this.options.mode === "vertical") {
+        leftPercent = getTopPercent(this.slider, input);
+      } else {
+        leftPercent = getLeftPercent(this.slider, input);
+      }
+
+      leftPercent = leftPercent.toFixed(2) + "%";
+      var leftPercentNum = parseFloat(leftPercent);
+      rightPercent = 100 - leftPercentNum + "%";
+
+      if (leftPercentNum > 0 && leftPercentNum < 100) {
+        removeClass(this.handle, 'transition');
+        removeClass(this.rightImage, 'transition');
+        removeClass(this.leftImage, 'transition');
+
+        if (this.options.animate && animate) {
+          addClass(this.handle, 'transition');
+          addClass(this.leftImage, 'transition');
+          addClass(this.rightImage, 'transition');
+        }
+
+        if (this.options.mode === "vertical") {
+          this.handle.style.top = leftPercent;
+          this.leftImage.style.height = leftPercent;
+          this.rightImage.style.height = rightPercent;
+        } else {
+          this.handle.style.left = leftPercent;
+          this.leftImage.style.width = leftPercent;
+          this.rightImage.style.width = rightPercent;
+        }
+        this.sliderPosition = leftPercent;
+      }
+    },
+
+    getPosition: function getPosition() {
+      return this.sliderPosition;
+    },
+
+    displayLabel: function displayLabel(element, labelText) {
+      var label = document.createElement("div");
+      label.className = 'jx-label';
+      label.setAttribute('tabindex', 0); //put the controller in the natural tab order of the document
+
+      setText(label, labelText);
+      element.appendChild(label);
+    },
+
+    displayCredits: function displayCredits() {
+      var credit = document.createElement("div");
+      credit.className = "jx-credit";
+
+      text = "<em>Photo Credits:</em>";
+      if (this.imgBefore.credit) {
+        text += " <em>Before</em> " + this.imgBefore.credit;
+      }
+      if (this.imgAfter.credit) {
+        text += " <em>After</em> " + this.imgAfter.credit;
+      }
+
+      credit.innerHTML = text;
+
+      this.wrapper.appendChild(credit);
+    },
+
+    setStartingPosition: function setStartingPosition(s) {
+      this.options.startingPosition = s;
+    },
+
+    checkImages: function checkImages() {
+      if (getImageDimensions(this.imgBefore.image).aspect() == getImageDimensions(this.imgAfter.image).aspect()) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    calculateDims: function calculateDims(width, height) {
+      var ratio = getImageDimensions(this.imgBefore.image).aspect();
+      if (width) {
+        height = width / ratio;
+      } else if (height) {
+        width = height * ratio;
+      }
+      return {
+        width: width,
+        height: height,
+        ratio: ratio
+      };
+    },
+
+    responsivizeIframe: function responsivizeIframe(dims) {
+      //Check the slider dimensions against the iframe (window) dimensions
+      if (dims.height < window.innerHeight) {
+        //If the aspect ratio is greater than 1, imgs are landscape, so letterbox top and bottom
+        if (dims.ratio >= 1) {
+          this.wrapper.style.paddingTop = parseInt((window.innerHeight - dims.height) / 2) + "px";
+        }
+      } else if (dims.height > window.innerHeight) {
+        /* If the image is too tall for the window, which happens at 100% width on large screens,
+         * force dimension recalculation based on height instead of width */
+        dims = this.calculateDims(0, window.innerHeight);
+        this.wrapper.style.paddingLeft = parseInt((window.innerWidth - dims.width) / 2) + "px";
+      }
+      if (this.options.showCredits) {
+        // accommodate the credits box within the iframe
+        dims.height -= 13;
+      }
+      return dims;
+    },
+
+    setWrapperDimensions: function setWrapperDimensions() {
+      var wrapperWidth = getComputedWidthAndHeight(this.wrapper).width;
+      var wrapperHeight = getComputedWidthAndHeight(this.wrapper).height;
+      var dims = this.calculateDims(wrapperWidth, wrapperHeight);
+      // if window is in iframe, make sure images don't overflow boundaries
+      if (window.location !== window.parent.location && !this.options.makeResponsive) {
+        dims = this.responsivizeIframe(dims);
+      }
+
+      this.wrapper.style.height = parseInt(dims.height) + "px";
+      this.wrapper.style.width = parseInt(dims.width) + "px";
+    },
+
+    optimizeWrapper: function optimizeWrapper(maxWidth) {
+      var result = juxtapose.OPTIMIZATION_ACCEPTED;
+      if (this.imgBefore.image.naturalWidth >= maxWidth && this.imgAfter.image.naturalWidth >= maxWidth) {
+        this.wrapper.style.width = maxWidth + "px";
+        result = juxtapose.OPTIMIZATION_WAS_CONSTRAINED;
+      } else if (this.imgAfter.image.naturalWidth < maxWidth) {
+        this.wrapper.style.width = this.imgAfter.image.naturalWidth + "px";
+      } else {
+        this.wrapper.style.width = this.imgBefore.image.naturalWidth + "px";
+      }
+      this.setWrapperDimensions();
+      return result;
+    },
+
+    _onLoaded: function _onLoaded() {
+
+      if (this.imgBefore && this.imgBefore.loaded === true && this.imgAfter && this.imgAfter.loaded === true) {
+
+        this.wrapper = document.querySelector(this.selector);
+        addClass(this.wrapper, 'juxtapose');
+
+        this.wrapper.style.width = getNaturalDimensions(this.imgBefore.image).width;
+        this.setWrapperDimensions();
+
+        this.slider = document.createElement("div");
+        this.slider.className = 'jx-slider';
+        this.wrapper.appendChild(this.slider);
+
+        if (this.options.mode != "horizontal") {
+          addClass(this.slider, this.options.mode);
+        }
+
+        this.handle = document.createElement("div");
+        this.handle.className = 'jx-handle';
+
+        this.rightImage = document.createElement("div");
+        this.rightImage.className = 'jx-image jx-right';
+        this.rightImage.appendChild(this.imgAfter.image);
+
+        this.leftImage = document.createElement("div");
+        this.leftImage.className = 'jx-image jx-left';
+        this.leftImage.appendChild(this.imgBefore.image);
+
+        this.labCredit = document.createElement("a");
+        this.labCredit.setAttribute('href', 'http://juxtapose.knightlab.com');
+        this.labCredit.setAttribute('target', '_blank');
+        this.labCredit.className = 'jx-knightlab';
+        this.labLogo = document.createElement("div");
+        this.labLogo.className = 'knightlab-logo';
+        this.labCredit.appendChild(this.labLogo);
+        this.projectName = document.createElement("span");
+        this.projectName.className = 'juxtapose-name';
+        setText(this.projectName, 'JuxtaposeJS');
+        this.labCredit.appendChild(this.projectName);
+
+        this.slider.appendChild(this.handle);
+        this.slider.appendChild(this.leftImage);
+        this.slider.appendChild(this.rightImage);
+        //this.slider.appendChild(this.labCredit);
+
+        this.leftArrow = document.createElement("div");
+        this.rightArrow = document.createElement("div");
+        this.control = document.createElement("div");
+        this.controller = document.createElement("div");
+
+        this.leftArrow.className = 'jx-arrow jx-left';
+        this.rightArrow.className = 'jx-arrow jx-right';
+        this.control.className = 'jx-control';
+        this.controller.className = 'jx-controller';
+
+        this.controller.setAttribute('tabindex', 0); //put the controller in the natural tab order of the document
+        this.controller.setAttribute('role', 'slider');
+        this.controller.setAttribute('aria-valuenow', 50);
+        this.controller.setAttribute('aria-valuemin', 0);
+        this.controller.setAttribute('aria-valuemax', 100);
+
+        this.handle.appendChild(this.leftArrow);
+        this.handle.appendChild(this.control);
+        this.handle.appendChild(this.rightArrow);
+        this.control.appendChild(this.controller);
+
+        this._init();
+      }
+    },
+
+    _init: function _init() {
+
+      if (this.checkImages() === false) {
+        console.warn(this, "Check that the two images have the same aspect ratio for the slider to work correctly.");
+      }
+
+      this.updateSlider(this.options.startingPosition, false);
+
+      if (this.options.showLabels === true) {
+        if (this.imgBefore.label) {
+          this.displayLabel(this.leftImage, this.imgBefore.label);
+        }
+        if (this.imgAfter.label) {
+          this.displayLabel(this.rightImage, this.imgAfter.label);
+        }
+      }
+
+      if (this.options.showCredits === true) {
+        this.displayCredits();
+      }
+
+      var self = this;
+      window.addEventListener("resize", function () {
+        self.setWrapperDimensions();
+      });
+
+      // Set up Javascript Events
+      // On mousedown, call updateSlider then set animate to false
+      // (if animate is true, adds css transition when updating).
+
+      this.slider.addEventListener("mousedown", function (e) {
+        e = e || window.event;
+        e.preventDefault();
+        self.updateSlider(e, true);
+        var animate = true;
+
+        this.addEventListener("mousemove", function (e) {
+          e = e || window.event;
+          e.preventDefault();
+          if (animate) {
+            self.updateSlider(e, false);
+          }
+        });
+
+        var mouseUpFunc = function mouseUpFunc(e) {
+          e = e || window.event;
+          e.preventDefault();
+          e.stopPropagation();
+          this.removeEventListener('mouseup', mouseUpFunc);
+          animate = false;
+        };
+
+        this.addEventListener('mouseup', mouseUpFunc);
+      });
+
+      this.slider.addEventListener("touchstart", function (e) {
+        e = e || window.event;
+        e.preventDefault();
+        e.stopPropagation();
+        self.updateSlider(e, true);
+
+        this.addEventListener("touchmove", function (e) {
+          e = e || window.event;
+          e.preventDefault();
+          e.stopPropagation();
+          self.updateSlider(event, false);
+        });
+      });
+
+      /* keyboard accessibility */
+
+      this.handle.addEventListener("keydown", function (e) {
+        e = e || window.event;
+        var key = e.which || e.keyCode;
+        var ariaValue = parseFloat(this.style.left);
+
+        //move jx-controller left
+        if (key == 37) {
+          ariaValue = ariaValue - 1;
+          var leftStart = parseFloat(this.style.left) - 1;
+          self.updateSlider(leftStart, false);
+          self.controller.setAttribute('aria-valuenow', ariaValue);
+        }
+
+        //move jx-controller right
+        if (key == 39) {
+          ariaValue = ariaValue + 1;
+          var rightStart = parseFloat(this.style.left) + 1;
+          self.updateSlider(rightStart, false);
+          self.controller.setAttribute('aria-valuenow', ariaValue);
+        }
+      });
+
+      //toggle right-hand image visibility
+      this.leftImage.addEventListener("keydown", function (event) {
+        var key = event.which || event.keyCode;
+        if (key == 13 || key == 32) {
+          self.updateSlider("90%", true);
+          self.controller.setAttribute('aria-valuenow', 90);
+        }
+      });
+
+      //toggle left-hand image visibility
+      this.rightImage.addEventListener("keydown", function (event) {
+        var key = event.which || event.keyCode;
+        if (key == 13 || key == 32) {
+          self.updateSlider("10%", true);
+          self.controller.setAttribute('aria-valuenow', 10);
+        }
+      });
+
+      juxtapose.sliders.push(this);
+
+      if (this.options.callback && typeof this.options.callback == 'function') {
+        this.options.callback(this);
+      }
+    }
+
+  };
+
+  /*
+    Given an element that is configured with the proper data elements, make a slider out of it.
+    Normally this will just be used by scanPage.
+  */
+  juxtapose.makeSlider = function (element, idx) {
+    if (typeof idx == 'undefined') {
+      idx = juxtapose.sliders.length; // not super threadsafe...
+    }
+
+    var w = element;
+
+    var images = w.querySelectorAll('img');
+
+    var options = {};
+    // don't set empty string into options, that's a false false.
+    if (w.getAttribute('data-animate')) {
+      options.animate = w.getAttribute('data-animate');
+    }
+    if (w.getAttribute('data-showlabels')) {
+      options.showLabels = w.getAttribute('data-showlabels');
+    }
+    if (w.getAttribute('data-showcredits')) {
+      options.showCredits = w.getAttribute('data-showcredits');
+    }
+    if (w.getAttribute('data-startingposition')) {
+      options.startingPosition = w.getAttribute('data-startingposition');
+    }
+    if (w.getAttribute('data-mode')) {
+      options.mode = w.getAttribute('data-mode');
+    }
+    if (w.getAttribute('data-makeresponsive')) {
+      options.mode = w.getAttribute('data-makeresponsive');
+    }
+
+    specificClass = 'juxtapose-' + idx;
+    addClass(element, specificClass);
+
+    selector = '.' + specificClass;
+
+    if (w.innerHTML) {
+      w.innerHTML = '';
+    } else {
+      w.innerText = '';
+    }
+
+    slider = new juxtapose.JXSlider(selector, [{
+      src: images[0].src,
+      label: images[0].getAttribute('data-label'),
+      credit: images[0].getAttribute('data-credit'),
+      alt: images[0].alt
+    }, {
+      src: images[1].src,
+      label: images[1].getAttribute('data-label'),
+      credit: images[1].getAttribute('data-credit'),
+      alt: images[1].alt
+    }], options);
+  };
+
+  //Enable HTML Implementation
+  juxtapose.scanPage = function () {
+    var elements = document.querySelectorAll('.juxtapose');
+    for (var i = 0; i < elements.length; i++) {
+      juxtapose.makeSlider(elements[i], i);
+    }
+  };
+
+  juxtapose.JXSlider = JXSlider;
+  window.juxtapose = juxtapose;
+
+  juxtapose.scanPage();
+})(document, window);
+
+// addEventListener polyfill / jonathantneal
+!window.addEventListener && function (WindowPrototype, DocumentPrototype, ElementPrototype, addEventListener, removeEventListener, dispatchEvent, registry) {
+  WindowPrototype[addEventListener] = DocumentPrototype[addEventListener] = ElementPrototype[addEventListener] = function (type, listener) {
+    var target = this;
+
+    registry.unshift([target, type, listener, function (event) {
+      event.currentTarget = target;
+      event.preventDefault = function () {
+        event.returnValue = false;
+      };
+      event.stopPropagation = function () {
+        event.cancelBubble = true;
+      };
+      event.target = event.srcElement || target;
+
+      listener.call(target, event);
+    }]);
+
+    this.attachEvent("on" + type, registry[0][3]);
+  };
+
+  WindowPrototype[removeEventListener] = DocumentPrototype[removeEventListener] = ElementPrototype[removeEventListener] = function (type, listener) {
+    for (var index = 0, register; register = registry[index]; ++index) {
+      if (register[0] == this && register[1] == type && register[2] == listener) {
+        return this.detachEvent("on" + type, registry.splice(index, 1)[0][3]);
+      }
+    }
+  };
+
+  WindowPrototype[dispatchEvent] = DocumentPrototype[dispatchEvent] = ElementPrototype[dispatchEvent] = function (eventObject) {
+    return this.fireEvent("on" + eventObject.type, eventObject);
+  };
+}(Window.prototype, HTMLDocument.prototype, Element.prototype, "addEventListener", "removeEventListener", "dispatchEvent", []);</script>
+    <script src="assets/d3.min.js"></script>
+</head>
+
+<body>
+
+    <d-front-matter>
+        <script type="text/json">{
+  "title": "Adversarially Robust Neural Style Transfer",
+  "description": "An experiment showing adversarial robustness makes neural style transfer work on a non-VGG architecture",
+  "password": "bugs",
+  "authors": [
+    {
+      "author": "Reiichiro Nakano",
+      "authorURL": "https://reiinakano.com/",
+      "affiliation": "",
+      "affiliationURL": ""
+    }
+  ],
+  "katex": {
+    "delimiters": [
+      {
+        "left": "$",
+        "right": "$",
+        "display": false
+      },
+      {
+        "left": "$$",
+        "right": "$$",
+        "display": true
+      }
+    ]
+  }
+  }</script>
+    </d-front-matter>
+
+    <d-title></d-title>
+
+    <d-article>
+
+        <section id="response-info"><em>
+                This article is part of a collection of responses to Ilyas et al. <d-cite key="ilyas2019adversarial">
+                </d-cite> paper "Adversarial
+                examples are not bugs, they are features". You can learn more about this process in this editorial
+                explanation. The author's rebuttal to this response is reproduced in context at the end of this article.
+                If
+                you want
+                to cite the rebuttal, please cite the linked collection of response rebuttals.</em>
+        </section>
+
+        <p>
+            A figure in Ilyas, et. al.<d-cite key="ilyas2019adversarial"></d-cite> that struck me as particularly
+            interesting
+            was the following graph showing a correlation between adversarial transferability between architectures and
+            their
+            tendency to learn similar non-robust features.
+        </p>
+
+        <figure id="figure-agent-adversarial" class="subgrid">
+            <figcaption style="grid-column: kicker">
+                Adversarial transferability vs test accuracy of different architectures trained on ResNet-50's
+                non-robust features.
+            </figcaption>
+            <div class="l-body">
+                <img src="images/transferability.png">
+            </div>
+        </figure>
+
+        <p>
+            One way to interpret this graph is that it shows how well a particular architecture is able to capture
+            non-robust features in an image.
+            <d-footnote>Since the non-robust features are defined by the non-robust features ResNet-50 captures,
+                $NRF_{resnet}$, what this graph really shows is how well an architecture captures $NRF_{resnet}$.
+            </d-footnote>
+        </p>
+
+        <p>
+            Notice how far back VGG<d-cite key="simonyan2014very"></d-cite> is compared to the other models.
+        </p>
+
+        <p>
+            In the unrelated field of neural style transfer<d-cite key="gatys2015"></d-cite>, VGG-based<d-cite
+                key="simonyan2014very"></d-cite> neural networks are also quite special since non-VGG architectures are
+            known to not work very well <d-footnote>This phenomenon is discussed at length in <a
+                    href="https://www.reddit.com/r/MachineLearning/comments/7rrrk3/d_eat_your_vggtables_or_why_does_neural_style/">this
+                    Reddit thread</a>.</d-footnote> without some sort of parameterization trick <d-cite
+                key="mordvintsev2018differentiable"></d-cite>.
+            The above interpretation of the graph provides an alternative explanation for this phenomenon.
+            <b>Since VGG is unable to capture non-robust features as well as other architectures, the outputs for style
+                transfer actually look more correct to humans!</b>
+            <d-footnote>To follow this argument, note that the perceptual losses used in neural style transfer are
+                dependent on matching features learned by a separately trained image classifier. If these learned
+                features don't make sense to humans (non-robust features), the outputs for neural style transfer won't
+                make sense either.</d-footnote>
+        </p>
+
+        <p>
+            Before proceeding, let's quickly discuss the results obtained by Mordvintsev, et. al.<d-cite
+                key="mordvintsev2018differentiable"></d-cite> in <a
+                href="https://distill.pub/2018/differentiable-parameterizations/">Differentiable Image
+                Parameterizations</a>, where they show that non-VGG architectures can work for style transfer by using a
+            simple technique previously established in feature visualization<d-cite key="olah2017feature"></d-cite>.
+            In their experiment, instead of optimizing the output image in RGB space, they optimize it in Fourier space,
+            and run the image through a series of transformations (e.g jitter, rotation, scaling) before passing it
+            through the neural network.
+            <!-- TODO: that's not true, Mordvintsev et al only used a different param. doesn't chage the argument afaics, though. -->
+        </p>
+
+        <p>
+            Can we reconcile this result with our hypothesis linking neural style transfer and non-robust features?
+        </p>
+
+        <p>
+            One possible theory is that all of these image transformations <i>weaken</i> or even <i>destroy</i>
+            non-robust features.
+            Since the optimization can no longer reliably manipulate non-robust features to bring down the loss, it is
+            forced to use robust features instead, which are presumably more resistant to the applied image
+            transformations (a rotated and jittered flappy ear still looks like a flappy ear).
+        </p>
+
+        <h2>A quick experiment</h2>
+
+        <p>
+            Testing our hypothesis is fairly straightforward:
+            Use an adversarially robust classifier for neural style transfer<d-cite key="gatys2015"></d-cite> and see
+            what happens.
+        </p>
+
+        <p>
+            I evaluated a regularly trained (non-robust) ResNet-50 with a robustly trained ResNet-50 from Engstrom, et.
+            al.<d-cite key="engstrom2019learning"></d-cite> on their performance on neural style transfer<d-cite
+                key="gatys2015"></d-cite>.
+            For comparison, I performed the same algorithm with a regular VGG-19<d-cite key="simonyan2014very"></d-cite>
+            .
+        </p>
+
+        <p>
+            To ensure a fair comparison despite the different networks having different optimal hyperparameters, I
+            performed a small grid search for each image and manually picked the best output per network.
+            Further details can be read in a footnote
+            <d-footnote>
+                L-BFGS<d-cite key="liu1989limited"></d-cite> was used for optimization as it showed faster convergence
+                over Adam.
+                For ResNet-50, the style layers used were the ReLu outputs after each of the 4 residual blocks,
+                $[relu2\_x, relu3\_x, relu4\_x, relu5\_x]$ while the content layer used was $relu4\_x$.
+                For VGG-19, style layers $[relu1\_1,relu2\_1,relu3\_1,relu4\_1,relu5\_1]$ were used with a content layer
+                $relu4\_2$.
+                In VGG-19, max pooling layers were replaced with avg pooling layers, as stated in Gatys, et. al<d-cite
+                    key="gatys2015"></d-cite>.
+            </d-footnote>
+            or observed in the accompanying Colaboratory notebook.
+        </p>
+
+        <p>
+            The results of this experiment can be explored in the diagram below.
+        </p>
+
+        <style>
+            #style-transfer-slider.juxtapose {
+                max-height: 512px;
+                max-width: 512px;
+            }
+        </style>
+        <figure class="subgrid">
+            <div class="l-body">
+                <b>Content image</b>
+                <select id="content-select" class="image-picker">
+                    <option data-img-src="images/thumbnails/ben.jpg" value="ben"></option>
+                    <option data-img-src="images/thumbnails/dancing.jpg" value="dancing"></option>
+                    <option data-img-src="images/thumbnails/tubingen.jpg" value="tubingen"></option>
+                </select>
+                <b>Style image</b>
+                <select id="style-select" class="image-picker">
+                    <option data-img-src="images/thumbnails/scream.jpg" value="scream"></option>
+                    <option data-img-src="images/thumbnails/starrynight.jpg" value="starry"></option>
+                    <option data-img-src="images/thumbnails/woman.jpg" value="woman"></option>
+                    <option data-img-src="images/thumbnails/picasso.jpg" value="picasso"></option>
+                </select>
+                <label><input id="check-compare-vgg" type="checkbox"><small>&nbsp; Compare VGG <> Robust
+                            ResNet</small></label>
+                <div id="style-transfer-slider" class="align-center" style="padding-top: 10px;"></div>
+            </div>
+            <figcaption class="add-colab-link" style="grid-column: text; padding-top: 20px;"></figcaption>
+        </figure>
+        <script>'use strict';
+
+// I don't know how to write JavaScript without a bundler. Please someone save me.
+
+(function () {
+
+  // Initialize slider
+  var currentContent = 'ben';
+  var currentStyle = 'scream';
+  var currentLeft = 'nonrobust';
+
+  var compareVGGCheck = document.getElementById("check-compare-vgg");
+  var styleTransferSliderDiv = document.getElementById("style-transfer-slider");
+
+  function refreshSlider() {
+    while (styleTransferSliderDiv.firstChild) {
+      styleTransferSliderDiv.removeChild(styleTransferSliderDiv.firstChild);
+    }
+    var imgPath1 = 'images/style-transfer/' + currentContent + '_' + currentStyle + '_' + currentLeft + '.jpg';
+    var imgPath2 = 'images/style-transfer/' + currentContent + '_' + currentStyle + '_robust.jpg';
+    new juxtapose.JXSlider('#style-transfer-slider', [{
+      src: imgPath1, // TODO: Might need to use absolute_url?
+      label: currentLeft === 'nonrobust' ? 'Non-robust ResNet50' : 'VGG'
+    }, {
+      src: imgPath2,
+      label: 'Robust ResNet50'
+    }], {
+      animate: true,
+      showLabels: true,
+      showCredits: false,
+      startingPosition: "50%",
+      makeResponsive: true
+    });
+  }
+
+  refreshSlider();
+
+  compareVGGCheck.onclick = function (evt) {
+    currentLeft = evt.target.checked ? 'vgg' : 'nonrobust';
+    refreshSlider();
+  };
+
+  // Initialize selector
+  $("#content-select").imagepicker({
+    changed: function changed(oldVal, newVal, event) {
+      currentContent = newVal;
+      refreshSlider();
+    }
+  });
+  $("#style-select").imagepicker({
+    changed: function changed(oldVal, newVal, event) {
+      currentStyle = newVal;
+      refreshSlider();
+    }
+  });
+})();</script>
+
+        <p>
+            Success!
+            The robust ResNet shows drastic improvement over the regular ResNet.
+            Remember, all we did was switch the ResNet's weights, the rest of the code for performing style transfer is
+            exactly the same!
+        </p>
+
+        <p>
+            A more interesting comparison can be done between VGG-19 and the robust ResNet.
+            At first glance, the robust ResNet's outputs seem on par with VGG-19.
+            Looking closer, however, the ResNet's outputs seem slightly noisier and exhibit some artifacts
+            <d-footnote>This is more obvious when the output image is initialized not with the content image, but with
+                Gaussian noise.</d-footnote>.
+        </p>
+
+        <link rel="stylesheet" href="assets/rnst/css/artifacts.css">
+        <div class="deepdream-examples l-body-outset">
+            <figure class="example" style="margin-bottom:20px;">
+                <div class="original" data-focus="10,0.43,0.21">
+                    <img src="images/zoom/vgg_texture.jpg">
+                    <div class="reticle"></div>
+                </div>
+                <div class="closeup">
+                    <img src="images/zoom/vgg_texture.jpg">
+                </div>
+                <figcaption>
+                    Texture synthesized with VGG.<br>
+                    <i>Mild artifacts.</i>
+                </figcaption>
+            </figure>
+            <figure class="example" style="margin-top:20px;">
+                <div class="original" data-focus="10,0.64,0.74">
+                    <img src="images/zoom/resnet_texture.jpg">
+                    <div class="reticle"></div>
+                </div>
+                <div class="closeup">
+                    <img src="images/zoom/resnet_texture.jpg">
+                </div>
+                <figcaption>
+                    Texture synthesized with robust ResNet.<br>
+                    <i>Severe artifacts.</i>
+                </figcaption>
+            </figure>
+        </div>
+        <figcaption style="margin-top:-20px;padding-bottom:20px;">A comparison of artifacts between textures synthesized
+            by VGG and ResNet. Interact by hovering around the images. This diagram was repurposed from <a
+                href="https://distill.pub/2016/deconv-checkerboard/">Deconvolution and Checkerboard Artifacts</a> by
+            Odena, et. al.</figcaption>
+
+        <script src="assets/rnst/js/artifacts.js"></script>
+
+        <p>
+            It is currently unclear exactly what causes these artifacts.
+            One theory is that they are checkerboard artifacts<d-cite key="odena2016deconvolution"></d-cite> caused by
+            non-divisible kernel size and stride in the convolution layers.
+            They could also be artifacts caused by the presence of max pooling layers<d-cite key="Hnaff2016GeodesicsOL">
+            </d-cite> in ResNet.
+            An interesting implication is that these artifacts, while problematic, seem orthogonal to the problem that
+            adversarial robustness solves in neural style transfer.
+        </p>
+
+        <h2>VGG remains a mystery</h2>
+
+        <p>
+            Although this experiment started because of an observation about a special characteristic of VGG nets, it
+            did not provide an explanation for this phenomenon.
+            Indeed, if we are to accept the theory that adversarial robustness is the reason VGG works out of the box
+            with neural style transfer, surely we'd find some indication in existing literature that VGG is naturally
+            more robust than other architectures.
+        </p>
+
+        <p>
+            A few papers<d-cite key="Galloway2019BatchNI,Hendrycks2019BenchmarkingNN,Su2018IsRT"></d-cite> indeed show
+            that VGG architectures are slightly more robust than ResNet.
+            However, they also show that AlexNet<d-cite key="krizhevsky2012"></d-cite>, not known to work well for
+            neural style transfer<d-footnote>As shown by Dávid Komorowicz<d-cite key="komorowicz2016neural"></d-cite> in
+                this <a href="https://dawars.me/neural-style-transfer-deep-learning/">blog post</a>.</d-footnote>, is
+            <i>above</i> VGG in terms of this "natural robustness".
+        </p>
+
+        <p>
+            Perhaps adversarial robustness just happens to incidentally fix or cover up the true reason non-VGG
+            architectures fail at style transfer (or other similar algorithms
+            <d-footnote>
+                In fact, neural style transfer is not the only pretrained classifier-based iterative image optimization
+                technique that magically works better with adversarial robustness. In Engstrom, et. al.<d-cite
+                    key="engstrom2019learning"></d-cite>, they show that feature visualization via activation
+                maximization<d-cite key="olah2017feature"></d-cite> works on robust classifiers <i>without</i> enforcing
+                any priors or regularization (e.g. image transformations and decorrelated parameterization) used by
+                previous work<d-cite key="olah2017feature,olah2018the"></d-cite>. In a recent chat with Chris Olah, he
+                pointed out that the aforementioned feature visualization techniques actually work well on VGG
+                <i>without</i> these priors, just like style transfer!
+            </d-footnote>
+            ) i.e. adversarial robustness is a sufficient but unnecessary condition for good style transfer.
+            Whatever the reason, I believe that further examination of VGG is a very interesting direction for future
+            work.
+        </p>
+
+        <section id="rebuttal">
+            <div class="rebuttal-info">The original paper's authors' rebuttal is shown here in context. If you want
+                to cite this rebuttal, please cite the linked collection of response rebuttals.</div>
+            <p><b>Response Summary</b>: Very interesting
+                results, highlighting the effect of non-robust features and the utility of
+                robust models for downstream tasks. We’re excited to see what kind of impact
+                robustly trained models will have in neural network art! We were also really
+                intrigued by the mysteriousness of VGG with style transfer. As such, we took a
+                deeper dive which found some interesting links between robustness and style
+                transfer that suggest that perhaps robustness does indeed have a role. </p>
+
+            <p><b>Response</b>: These experiments are really cool! It is interesting that
+                preventing the reliance of a model on non-robust features improves performance
+                for style transfer, even without an explicit task-related objective (i.e. we
+                didn’t train the networks to be better for style transfer). </p>
+
+            <p> We found the discussion of VGG as a “mysterious network” really
+                interesting&mdash;it would be valuable to understand what factors drive style transfer
+                performance more generally. Though not a complete solution, we made a couple of
+                observations while investigating further: </p>
+
+            <p><i>Style transfer does work with AlexNet: </i>One wrinkle in the idea that
+                robustness is the “secret ingredient” to style transfer could be that VGG is not
+                the most naturally robust network&mdash;AlexNet is. However, based on our own
+                testing, style transfer does seem to work with AlexNet out-of-the-box: </p>
+            <figure class="subgrid" style="background: white; padding: 1em; border-radius: 1em;">
+                <img class="l-body" src="images/alexnetworks.png" />
+                <figcaption style="grid-column: kicker">
+                    <span style="hyphens: manual;">Style transfer using AlexNet, using
+                        conv_1 through conv_4.</span>
+                </figcaption>
+            </figure>
+
+            <p>Note that as the comment notes for robust models as well, there are still
+                checkerboard patterns here despite the style transfer still working. So this,
+                once again, might indicate that perhaps these two phenomena (checkerboard
+                patterns and style transfer working) are not as intertwined as previously
+                thought. </p>
+
+            <p><i>From prediction robustness to layer robustness: </i>Thus, perhaps
+                robustness is actually a factor here! On the other hand, both AlexNet and VGG
+                are not that much more robust than ResNets (for which style transfer completely
+                fails), and yet seem to have dramatically better performance. In order to try to
+                explain this, recall that style transfer is implemented as a minimization of a
+                combined objective consisting of a style loss and a content loss. Now, as we
+                found it, the network we use to compute the style loss is far more important
+                than the one for the content loss. The following demo illustrates this&mdash;we can
+                actually use a non-robust ResNet for the content loss and everything works just
+                fine:</p>
+            <figure class="subgrid">
+
+                <img class="l-body" src="images/stylematters.png" />
+                <figcaption style="grid-column: kicker">
+                    <span style="hyphens: manual;">Style transfer seems to be rather
+                        invariant to the choice of content network used, and very sensitive
+                        to the style network used.</span>
+                </figcaption>
+            </figure>
+
+            <p>Therefore, from now on, we use a fixed ResNet-50 for the content loss as a
+                control, and only worry about the style loss. </p>
+
+            <p>Next, note that the way that style loss works is by using the first few
+                layers of the relevant network. Thus, perhaps it is not about the robustness of
+                VGG’s predictions, but instead the robustness of the layers that we actually use
+                for style transfer? </p>
+
+            <p> To test this hypothesis, we measure the robustness of a layer $f$ as follows:
+            </p>
+
+            <d-math block>
+                R(f) = \frac{\mathbb{E}_{x_1\sim D}\left[\max_{x'} \|f(x') - f(x_1)\|_2 \right]}
+                {\mathbb{E}_{x_1, x_2 \sim D}\left[\|f(x_1) - f(x_2)\|_2\right]}
+            </d-math>
+
+            <p> Essentially, this tells us how much we can change the
+                output of that layer $f(x)$ within a small ball, normalized by how far apart
+                representations are between images in general. We’ve plotted this value for
+                the first few layers in a couple of different networks below: </p>
+            <figure class="subgrid">
+
+                <img class="l-body" src="images/robustnesses.png" style="width: 80%;" />
+                <figcaption style="grid-column: kicker">
+                    <span style="hyphens: manual;">The robustness $R(f)$ of the first
+                        four layers of VGG16, AlexNet, and robust/standard ResNet-50
+                        trained on ImageNet.</span>
+                </figcaption>
+            </figure>
+
+            <p> Here, it becomes clear that, the first few layers of VGG and AlexNet are
+                indeed almost as robust as the first few layers of the robust ResNet! This is
+                perhaps a more convincing indication (compared to a very small increase in
+                prediction robustness) that robustness might have something to with VGG’s
+                success in style transfer. </p>
+
+            <p> Finally, suppose we restrict style transfer to only use a single layer of
+                the network when computing the style loss<d-footnote>Usually style transfer uses
+                    several layers in the loss function to get the most visually appealing results
+                    &mdash;here we’re only interested in whether or not style transfer works (i.e.
+                    actually confers some style onto the image).</d-footnote>. Again, the more
+                robust layers seem to indeed work better for style transfer! Since all of the
+                layers in the robust ResNet are robust, style transfer yields non-trivial
+                results even using the last layer alone. Conversely, VGG and AlexNet seem to
+                excel in the earlier layers (where they are non-trivially robust) but fail when
+                using exclusively later (non-robust) layers: </p>
+
+            <figure class="subgrid">
+                <img class="l-body" src="images/styletransfer.png" />
+                <figcaption style="grid-column: kicker">
+                    <span style="hyphens: manual;">Style transfer using a single layer. The
+                        names of the layers and their robustness $R(f)$ are printed below
+                        each style transfer result. We find that for both networks, the robust
+                        layers seem to work (for the robust ResNet, every layer is robust).</span>
+                </figcaption>
+            </figure>
+
+            <p> Of course, there is much further work to be done here, but we are excited
+                to see further work into understanding the role of both robustness and the VGG
+                in network-based image manipulation. </p>
+        </section>
+
+    </d-article>
+
+
+
+    <d-appendix>
+        <h3>Acknowledgments</h3>
+        <p>
+            The experiment in this article was built on top of Engstrom, et. al.'s<d-cite key="engstrom2019learning">
+            </d-cite> <a href="">open-sourced code and model weights</a>.
+            Chris Olah pointed out that feature visualization works well on VGG without priors or regularization.
+            Andrew Ilyas pointed out literature that showed VGG networks were slightly more robust than ResNet.
+        </p>
+
+        <p>
+            The diagram comparing artifacts was repurposed from Odena et. al.'s<d-cite key="odena2016deconvolution">
+            </d-cite> <a href="https://distill.pub/2016/deconv-checkerboard/">Deconvolution and Checkerboard
+                Artifacts</a>.
+        </p>
+
+        <p>
+            All experiments were performed on Google Colaboratory.
+        </p>
+
+        <d-footnote-list></d-footnote-list>
+        <d-citation-list></d-citation-list>
+    </d-appendix>
+
+    <!-- bibliography will be inlined during Distill pipeline's pre-rendering -->
+    <d-bibliography src="bibliography.bib"></d-bibliography>
+
+<script type="text/javascript" src="index.bundle.js"></script></body>
