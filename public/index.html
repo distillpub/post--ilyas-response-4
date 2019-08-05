@@ -48,17 +48,19 @@ d-figure > figure {
 }
 
 #rebuttal,
-#response-info {
+.response-info {
 	margin: 1em 0;
-	background-color: hsl(128, 50%, 97%);
-	border-left: solid hsl(129, 50%, 25%) 3px;
+	background-color: hsl(228, 50%, 97%);
+	border-left: solid hsl(229, 50%, 25%) 3px;
 	padding: 1em;
-	/* border-radius: 0.25em; */
 }
 
-#rebuttal .rebuttal-info {
+#rebuttal,
+.rebuttal-info {
 	color: hsl(129, 50%, 15%);
-	font-style: italic;
+	background-color: hsl(128, 50%, 97%);
+	border-left: solid hsl(128, 50%, 25%) 3px;
+	/* font-style: italic; */
 	/* background-color: hsl(128, 50%, 90%); */
 	/* border: 1px solid hsl(128, 25%, 85%); */
 	/* padding: 0.5em; */
@@ -1352,14 +1354,11 @@ function _classCallCheck(instance, Constructor) {
 
     <d-article>
 
-        <section id="response-info"><em>
-                This article is part of a collection of responses to Ilyas et al. <d-cite key="ilyas2019adversarial">
-                </d-cite> paper "Adversarial
-                examples are not bugs, they are features". You can learn more about this process in this editorial
-                explanation. The author's rebuttal to this response is reproduced in context at the end of this article.
-                If
-                you want
-                to cite the rebuttal, please cite the linked collection of response rebuttals.</em>
+        <section class="response-info">
+            This article is part of a discussion of Ilyas et al. <d-cite key="ilyas2019adversarial">
+            </d-cite> paper <em>"Adversarial
+                examples are not bugs, they are features"</em>. You can learn more in the main <a
+                href="/2019/advex-bugs-responses/">discussion article</a>.</em>
         </section>
 
         <p>
@@ -1370,14 +1369,12 @@ function _classCallCheck(instance, Constructor) {
             tendency to learn similar non-robust features.
         </p>
 
-        <figure id="figure-agent-adversarial" class="subgrid">
-            <figcaption style="grid-column: kicker">
+        <figure id="figure-agent-adversarial">
+            <img class="l-body" src="images/transferability.png">
+            <figcaption>
                 Adversarial transferability vs test accuracy of different architectures trained on ResNet-50's
                 non-robust features.
             </figcaption>
-            <div class="l-body">
-                <img src="images/transferability.png">
-            </div>
         </figure>
 
         <p>
@@ -1417,7 +1414,6 @@ function _classCallCheck(instance, Constructor) {
             In their experiment, instead of optimizing the output image in RGB space, they optimize it in Fourier space,
             and run the image through a series of transformations (e.g jitter, rotation, scaling) before passing it
             through the neural network.
-            <!-- TODO: that's not true, Mordvintsev et al only used a different param. doesn't chage the argument afaics, though. -->
         </p>
 
         <p>
@@ -1475,13 +1471,14 @@ function _classCallCheck(instance, Constructor) {
                 max-width: 512px;
             }
         </style>
-        <figure class="subgrid">
+        <figure>
             <div class="l-body">
                 <b>Content image</b>
                 <select id="content-select" class="image-picker">
                     <option data-img-src="images/thumbnails/ben.jpg" value="ben"></option>
                     <option data-img-src="images/thumbnails/dancing.jpg" value="dancing"></option>
                     <option data-img-src="images/thumbnails/tubingen.jpg" value="tubingen"></option>
+                    <option data-img-src="images/thumbnails/stata.jpg" value="stata"></option>
                 </select>
                 <b>Style image</b>
                 <select id="style-select" class="image-picker">
@@ -1490,8 +1487,8 @@ function _classCallCheck(instance, Constructor) {
                     <option data-img-src="images/thumbnails/woman.jpg" value="woman"></option>
                     <option data-img-src="images/thumbnails/picasso.jpg" value="picasso"></option>
                 </select>
-                <label><input id="check-compare-vgg" type="checkbox"><small>&nbsp; Compare VGG <> Robust
-                            ResNet</small></label>
+                <label><input id="check-compare-vgg" type="checkbox"><small>&nbsp; Compare VGG or Robust
+                        ResNet</small></label>
                 <div id="style-transfer-slider" class="align-center" style="padding-top: 10px;"></div>
             </div>
             <figcaption class="add-colab-link" style="grid-column: text; padding-top: 20px;"></figcaption>
@@ -1591,45 +1588,52 @@ function _classCallCheck(instance, Constructor) {
                 <div class="closeup">
                     <img src="images/zoom/resnet_texture.jpg">
                 </div>
-                <figcaption>
-                    Texture synthesized with robust ResNet.<br>
-                    <i>Severe artifacts.</i>
-                </figcaption>
+                <figcaption style="margin-top:-20px;padding-bottom:20px;">A comparison of artifacts between textures
+                    synthesized
+                    by VGG and ResNet. Interact by hovering around the images. This diagram was repurposed from <a
+                        href="https://distill.pub/2016/deconv-checkerboard/">Deconvolution and Checkerboard
+                        Artifacts</a> by
+                    Odena, et. al.</figcaption>
+
+                <script src="assets/rnst/js/artifacts.js"></script>
             </figure>
         </div>
-        <figcaption style="margin-top:-20px;padding-bottom:20px;">A comparison of artifacts between textures synthesized
-            by VGG and ResNet. Interact by hovering around the images. This diagram was repurposed from <a
-                href="https://distill.pub/2016/deconv-checkerboard/">Deconvolution and Checkerboard Artifacts</a> by
-            Odena, et. al.</figcaption>
-
-        <script src="assets/rnst/js/artifacts.js"></script>
 
         <p>
             It is currently unclear exactly what causes these artifacts.
-            One theory is that they are checkerboard artifacts<d-cite key="odena2016deconvolution"></d-cite> caused by
+            One theory is that they are checkerboard artifacts<d-cite key="odena2016deconvolution"></d-cite>
+            caused by
             non-divisible kernel size and stride in the convolution layers.
             They could also be artifacts caused by the presence of max pooling layers<d-cite key="Hnaff2016GeodesicsOL">
             </d-cite> in ResNet.
-            An interesting implication is that these artifacts, while problematic, seem orthogonal to the problem that
+            An interesting implication is that these artifacts, while problematic, seem orthogonal to the
+            problem that
             adversarial robustness solves in neural style transfer.
         </p>
 
         <h2>VGG remains a mystery</h2>
 
         <p>
-            Although this experiment started because of an observation about a special characteristic of VGG nets, it
+            Although this experiment started because of an observation about a special characteristic of VGG
+            nets, it
             did not provide an explanation for this phenomenon.
-            Indeed, if we are to accept the theory that adversarial robustness is the reason VGG works out of the box
-            with neural style transfer, surely we'd find some indication in existing literature that VGG is naturally
+            Indeed, if we are to accept the theory that adversarial robustness is the reason VGG works out of
+            the box
+            with neural style transfer, surely we'd find some indication in existing literature that VGG is
+            naturally
             more robust than other architectures.
         </p>
 
         <p>
-            A few papers<d-cite key="Galloway2019BatchNI,Hendrycks2019BenchmarkingNN,Su2018IsRT"></d-cite> indeed show
+            A few papers<d-cite key="Galloway2019BatchNI,Hendrycks2019BenchmarkingNN,Su2018IsRT"></d-cite>
+            indeed show
             that VGG architectures are slightly more robust than ResNet.
-            However, they also show that AlexNet<d-cite key="krizhevsky2012"></d-cite>, not known to work well for
-            neural style transfer<d-footnote>As shown by Dávid Komorowicz<d-cite key="komorowicz2016neural"></d-cite> in
-                this <a href="https://dawars.me/neural-style-transfer-deep-learning/">blog post</a>.</d-footnote>, is
+            However, they also show that AlexNet<d-cite key="krizhevsky2012"></d-cite>, not known to work well
+            for
+            neural style transfer<d-footnote>As shown by Dávid Komorowicz<d-cite key="komorowicz2016neural">
+                </d-cite> in
+                this <a href="https://dawars.me/neural-style-transfer-deep-learning/">blog post</a>.
+            </d-footnote>, is
             <i>above</i> VGG in terms of this "natural robustness".
         </p>
 
@@ -1637,73 +1641,86 @@ function _classCallCheck(instance, Constructor) {
             Perhaps adversarial robustness just happens to incidentally fix or cover up the true reason non-VGG
             architectures fail at style transfer (or other similar algorithms
             <d-footnote>
-                In fact, neural style transfer is not the only pretrained classifier-based iterative image optimization
+                In fact, neural style transfer is not the only pretrained classifier-based iterative image
+                optimization
                 technique that magically works better with adversarial robustness. In Engstrom, et. al.<d-cite
                     key="engstrom2019learning"></d-cite>, they show that feature visualization via activation
-                maximization<d-cite key="olah2017feature"></d-cite> works on robust classifiers <i>without</i> enforcing
-                any priors or regularization (e.g. image transformations and decorrelated parameterization) used by
-                previous work<d-cite key="olah2017feature,olah2018the"></d-cite>. In a recent chat with Chris Olah, he
+                maximization<d-cite key="olah2017feature"></d-cite> works on robust classifiers <i>without</i>
+                enforcing
+                any priors or regularization (e.g. image transformations and decorrelated parameterization) used
+                by
+                previous work<d-cite key="olah2017feature,olah2018the"></d-cite>. In a recent chat with Chris
+                Olah, he
                 pointed out that the aforementioned feature visualization techniques actually work well on VGG
                 <i>without</i> these priors, just like style transfer!
             </d-footnote>
             ) i.e. adversarial robustness is a sufficient but unnecessary condition for good style transfer.
-            Whatever the reason, I believe that further examination of VGG is a very interesting direction for future
+            Whatever the reason, I believe that further examination of VGG is a very interesting direction for
+            future
             work.
         </p>
 
+        <div class="response-info">Ilyas, et. al.'s rebuttal is shown here in context. To cite this
+            rebuttal, please cite their <a href="/2019/advex-bugs-responses/rebuttal/#citation">collection of
+                response rebuttals</a>.</div>
+
         <section id="rebuttal">
-            <div class="rebuttal-info">The original paper's authors' rebuttal is shown here in context. If you want
-                to cite this rebuttal, please cite the linked collection of response rebuttals.</div>
+
             <p><b>Response Summary</b>: Very interesting
                 results, highlighting the effect of non-robust features and the utility of
                 robust models for downstream tasks. We’re excited to see what kind of impact
                 robustly trained models will have in neural network art! We were also really
-                intrigued by the mysteriousness of VGG with style transfer. As such, we took a
+                intrigued by the mysteriousness of VGG in the context of style transfer<d-cite key="gatys2015">
+                </d-cite>. As such, we took a
                 deeper dive which found some interesting links between robustness and style
-                transfer that suggest that perhaps robustness does indeed have a role. </p>
+                transfer that suggest that perhaps robustness does indeed play a role here. </p>
 
             <p><b>Response</b>: These experiments are really cool! It is interesting that
                 preventing the reliance of a model on non-robust features improves performance
-                for style transfer, even without an explicit task-related objective (i.e. we
+                on style transfer, even without an explicit task-related objective (i.e. we
                 didn’t train the networks to be better for style transfer). </p>
 
-            <p> We found the discussion of VGG as a “mysterious network” really
+            <p> We also found the discussion of VGG as a “mysterious network” really
                 interesting&mdash;it would be valuable to understand what factors drive style transfer
-                performance more generally. Though not a complete solution, we made a couple of
+                performance more generally. Though not a complete answer, we made a couple of
                 observations while investigating further: </p>
 
             <p><i>Style transfer does work with AlexNet: </i>One wrinkle in the idea that
                 robustness is the “secret ingredient” to style transfer could be that VGG is not
                 the most naturally robust network&mdash;AlexNet is. However, based on our own
-                testing, style transfer does seem to work with AlexNet out-of-the-box: </p>
-            <figure class="subgrid" style="background: white; padding: 1em; border-radius: 1em;">
+                testing, style transfer does seem to work with AlexNet out-of-the-box, as
+                long as we use a few early layers in the network (in a similar manner to
+                VGG): </p>
+            <figure>
                 <img class="l-body" src="images/alexnetworks.png" />
-                <figcaption style="grid-column: kicker">
-                    <span style="hyphens: manual;">Style transfer using AlexNet, using
-                        conv_1 through conv_4.</span>
+                <figcaption>
+                    Style transfer using AlexNet, using conv_1 through conv_4.
                 </figcaption>
             </figure>
 
-            <p>Note that as the comment notes for robust models as well, there are still
-                checkerboard patterns here despite the style transfer still working. So this,
-                once again, might indicate that perhaps these two phenomena (checkerboard
+            <p>
+                Observe that even though style transfer still works, there are checkerboard
+                patterns emerging&mdash;this seems to be a similar phenomenon to the one noticed
+                in the comment in the context of robust models.
+                This might be another indication that these two phenomena (checkerboard
                 patterns and style transfer working) are not as intertwined as previously
-                thought. </p>
+                thought.
+            </p>
 
-            <p><i>From prediction robustness to layer robustness: </i>Thus, perhaps
-                robustness is actually a factor here! On the other hand, both AlexNet and VGG
-                are not that much more robust than ResNets (for which style transfer completely
-                fails), and yet seem to have dramatically better performance. In order to try to
+            <p><i>From prediction robustness to layer robustness: </i> Another
+                potential wrinkle here is that both AlexNet and VGG are not that
+                much more robust than ResNets (for which style transfer completely fails),
+                and yet seem to have dramatically better performance. To try to
                 explain this, recall that style transfer is implemented as a minimization of a
-                combined objective consisting of a style loss and a content loss. Now, as we
-                found it, the network we use to compute the style loss is far more important
+                combined objective consisting of a style loss and a content loss. We found,
+                however, that the network we use to compute the
+                style loss is far more important
                 than the one for the content loss. The following demo illustrates this&mdash;we can
                 actually use a non-robust ResNet for the content loss and everything works just
                 fine:</p>
-            <figure class="subgrid">
-
+            <figure>
                 <img class="l-body" src="images/stylematters.png" />
-                <figcaption style="grid-column: kicker">
+                <figcaption>
                     <span style="hyphens: manual;">Style transfer seems to be rather
                         invariant to the choice of content network used, and very sensitive
                         to the style network used.</span>
@@ -1713,12 +1730,12 @@ function _classCallCheck(instance, Constructor) {
             <p>Therefore, from now on, we use a fixed ResNet-50 for the content loss as a
                 control, and only worry about the style loss. </p>
 
-            <p>Next, note that the way that style loss works is by using the first few
+            <p>Now, note that the way that style loss works is by using the first few
                 layers of the relevant network. Thus, perhaps it is not about the robustness of
-                VGG’s predictions, but instead the robustness of the layers that we actually use
+                VGG’s predictions, but instead about the robustness of the layers that we actually use
                 for style transfer? </p>
 
-            <p> To test this hypothesis, we measure the robustness of a layer $f$ as follows:
+            <p> To test this hypothesis, we measure the robustness of a layer $f$ as:
             </p>
 
             <d-math block>
@@ -1726,14 +1743,13 @@ function _classCallCheck(instance, Constructor) {
                 {\mathbb{E}_{x_1, x_2 \sim D}\left[\|f(x_1) - f(x_2)\|_2\right]}
             </d-math>
 
-            <p> Essentially, this tells us how much we can change the
+            <p> Essentially, this quantity tells us how much we can change the
                 output of that layer $f(x)$ within a small ball, normalized by how far apart
                 representations are between images in general. We’ve plotted this value for
                 the first few layers in a couple of different networks below: </p>
-            <figure class="subgrid">
-
+            <figure>
                 <img class="l-body" src="images/robustnesses.png" style="width: 80%;" />
-                <figcaption style="grid-column: kicker">
+                <figcaption>
                     <span style="hyphens: manual;">The robustness $R(f)$ of the first
                         four layers of VGG16, AlexNet, and robust/standard ResNet-50
                         trained on ImageNet.</span>
@@ -1741,10 +1757,10 @@ function _classCallCheck(instance, Constructor) {
             </figure>
 
             <p> Here, it becomes clear that, the first few layers of VGG and AlexNet are
-                indeed almost as robust as the first few layers of the robust ResNet! This is
-                perhaps a more convincing indication (compared to a very small increase in
-                prediction robustness) that robustness might have something to with VGG’s
-                success in style transfer. </p>
+                actually almost as robust as the first few layers of the robust ResNet!
+                This is perhaps a more convincing indication that robustness might have
+                something to with VGG’s success in style transfer after all.
+            </p>
 
             <p> Finally, suppose we restrict style transfer to only use a single layer of
                 the network when computing the style loss<d-footnote>Usually style transfer uses
@@ -1757,9 +1773,10 @@ function _classCallCheck(instance, Constructor) {
                 excel in the earlier layers (where they are non-trivially robust) but fail when
                 using exclusively later (non-robust) layers: </p>
 
-            <figure class="subgrid">
+            <figure>
                 <img class="l-body" src="images/styletransfer.png" />
-                <figcaption style="grid-column: kicker">
+                <figcaption>
+                    <!-- <span class="figure-number">Figure 1:</span> -->
                     <span style="hyphens: manual;">Style transfer using a single layer. The
                         names of the layers and their robustness $R(f)$ are printed below
                         each style transfer result. We find that for both networks, the robust
@@ -1767,9 +1784,14 @@ function _classCallCheck(instance, Constructor) {
                 </figcaption>
             </figure>
 
-            <p> Of course, there is much further work to be done here, but we are excited
+            <p> Of course, there is much more work to be done here, but we are excited
                 to see further work into understanding the role of both robustness and the VGG
                 in network-based image manipulation. </p>
+        </section>
+
+        <section class="response-info">
+            You can find more responses in the main <a href="/2019/advex-bugs-responses/">discussion
+                article</a>.</em>
         </section>
 
     </d-article>
