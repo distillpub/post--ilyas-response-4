@@ -57,12 +57,7 @@
 
     <d-article>
 
-        <section class="response-info">
-            This article is part of a discussion of Ilyas et al. <d-cite key="ilyas2019adversarial">
-            </d-cite> paper <em>"Adversarial
-                examples are not bugs, they are features"</em>. You can learn more in the main <a
-                href="/2019/advex-bugs-responses/">discussion article</a>.</em>
-        </section>
+        <%= require("raw-loader!../../shared/header-info.htmlt") %>
 
         <p>
             A figure in Ilyas, et. al.<d-cite key="ilyas2019adversarial"></d-cite> that struck me as particularly
@@ -315,10 +310,7 @@
             work.
         </p>
 
-        <div class="response-info">
-            Ilyas, et. al.'s rebuttal is shown here in context. To cite this rebuttal, please cite their <a
-                href="/2019/advex-bugs-responses/rebuttal/#citation">collection of response rebuttals</a>.
-        </div>
+        <%= require("raw-loader!../../shared/comment-header-info.htmlt") %>
 
         <section id="rebuttal">
 
@@ -445,10 +437,7 @@
                 in network-based image manipulation. </p>
         </section>
 
-        <section class="response-info">
-            You can find more responses in the main <a href="/2019/advex-bugs-responses/">discussion
-                article</a>.</em>
-        </section>
+        <%= require("raw-loader!../../shared/comment-footer-info.htmlt") %>
 
     </d-article>
 
