@@ -1572,7 +1572,7 @@ function _classCallCheck(instance, Constructor) {
                 </div>
                 <figcaption>
                     Texture synthesized with VGG.<br>
-                    <i>Mild artifacts.</i>
+                    <em>Mild artifacts.</em>
                 </figcaption>
             </figure>
             <figure class="example" style="margin-top:20px;">
@@ -1583,16 +1583,23 @@ function _classCallCheck(instance, Constructor) {
                 <div class="closeup">
                     <img src="images/zoom/resnet_texture.jpg">
                 </div>
-                <figcaption style="margin-top:-20px;padding-bottom:20px;">A comparison of artifacts between textures
-                    synthesized
-                    by VGG and ResNet. Interact by hovering around the images. This diagram was repurposed from <a
-                        href="https://distill.pub/2016/deconv-checkerboard/">Deconvolution and Checkerboard
-                        Artifacts</a> by
-                    Odena, et. al.</figcaption>
-
+                <figcaption>
+                    Texture synthesized with robust ResNet.<br>
+                    <em>Severe artifacts.</em>
+                </figcaption>
                 <script src="assets/rnst/js/artifacts.js"></script>
             </figure>
         </div>
+
+        <figcaption style="margin-top:-20px;padding-bottom:20px;">
+            A comparison of artifacts between textures synthesized by VGG and ResNet.
+            Interact by hovering around the images.
+            This diagram was repurposed from
+            <a href="https://distill.pub/2016/deconv-checkerboard/">
+                Deconvolution and Checkerboard Artifacts
+            </a>
+            by Odena, et. al.
+        </figcaption>
 
         <p>
             It is currently unclear exactly what causes these artifacts.
